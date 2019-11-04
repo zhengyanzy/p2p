@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>蓝源Eloan-P2P平台</title>
+    <div th:include="commons/links :: links"></div>
+    <script type="text/javascript" src="static/js/plugins/jquery.twbsPagination.min.js"></script>
+</head>
+<body>
+<!-- 网页顶部导航 -->
+<div th:replace="commons/head :: header"></div>
+<div th:replace="commons/navbar :: navbar(activeUrl='index')"></div>
+<!-- 投资列表 -->
+<div class="container el-panel">
+    <div class="panel el-panel">
+        <div class="panel-title">
+					<span class="pull-left">
+						我的投标
+					</span>
+        </div>
+        <table class="table el-table table-hover">
+            <thead>
+            <tr>
+                <th>借款标题</th>
+                <th>投标金额</th>
+                <th>年化利率</th>
+                <th width="80px">操作</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+        <div style="text-align: right;" id="page_container">
+            <ul id="pagination" class="pagination"></ul>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $.ajax({
+        url: "/website/bid_list_td.do",
+        type: "GET",
+        dataType: "html",
+        async: false,//同步请求
+        success: function (data) {
+            console.log(data)
+            var list = $("#list");
+            list.hide();//淡入淡出
+            list.html(data);
+            list.show(500);
+        }
+    })
+</script>
+</html>

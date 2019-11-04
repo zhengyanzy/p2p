@@ -1,0 +1,111 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>蓝源Eloan-P2P平台(系统管理平台)</title>
+
+    <div th:replace="common/header::header"></div>
+    <script type="text/javascript" src="/static/js/plugins/jquery.form.js"></script>
+    <script type="text/javascript" src="/static/js/plugins/jquery.twbsPagination.min.js"></script>
+    <script type="text/javascript" src="/static/js/My97DatePicker/WdatePicker.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <div th:replace="common/top::navbar"></div>
+    <div class="row">
+        <div class="col-sm-3">
+            <div th:replace="common/menu::menu(activeUrl='iplog')"></div>
+        </div>
+        <div class="col-sm-9">
+            <div class="page-header">
+                <h3>登录日志查询</h3>
+            </div>
+            <form id="searchForm" class="form-inline" method="get" action="/ipLog.do">
+                <input type="hidden" id="currentPage" name="currentPage" value="1"/>
+                <div class="form-group">
+                    <label>状态</label>
+                    <select class="form-control" name="loginState" id="state">
+                        <option value="-1">全部</option>
+                        <option value="0">登录失败</option>
+                        <option value="1">登录成功</option>
+                    </select>
+                    <script type="text/javascript">
+                        $("#state option[value='"+[[${qo.getLoginState()}]]+"']").attr("selected", true);
+                    </script>
+                </div>
+                <div class="form-group">
+                    <label>登陆时间</label>
+                    <input type="date" class="form-control beginDate" name="beginDate"
+                           th:value="${#calendars.format(qo.beginDate,'yyyy-MM-dd')}"/>到
+                    <input type="date" class="form-control endDate" name="endDate"
+                           th:value="${#calendars.format(qo.endDate,'yyyy-MM-dd')}"/>
+                </div>
+                <div class="form-group">
+                    <label>用户类型</label>
+                    <select class="form-control" name="userType" id="userType">
+                        <option value="-1">全部</option>
+                        <option value="0">后台管理员</option>
+                        <option value="1">前台用户</option>
+                    </select>
+                    <script type="text/javascript">
+                        $("#userType option[value='"+[[${qo.getUserType()}]]+"']").attr("selected", true);
+                    </script>
+                </div>
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input class="form-control" type="text" name="username" th:value="${qo.getUsername()}"/>
+                </div>
+                <div class="form-group">
+                    <button id="query" type="button" class="btn btn-success"><i class="icon-search"></i> 查询</button>
+                </div>
+            </form>
+            <div class="panel panel-default">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>用户</th>
+                        <th>登录时间</th>
+                        <th>登录ip</th>
+                        <th>登录状态</th>
+                        <th>用户类型</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr th:each="prod:${pageResult.listData}">
+                        <td th:text="${prod.userName}"></td>
+                        <td th:text="${#calendars.format(prod.loginTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${prod.ip}"></td>
+                        <td th:text="${prod.getUserTypeDisplay()}"></td>
+                        <td th:text="${prod.loginState==0?'登录失败':'登录成功'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="text-align: center;" id="pagination_container">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $("#query").click(function () {
+        $("#currentPage").val(1);
+        $("#searchForm").submit();
+    });
+
+    $("#pagination_container").twbsPagination({
+        totalPages: [[${pageResult.getTotalPage()}]],
+        visiblePages: 5,
+        startPage: [[${pageResult.getCurrentPage()}]],
+        first: "首页",
+        prev: "上一页",
+        next: "下一页",
+        last: "末页",
+        onPageClick: function (event, page) {
+            $("#currentPage").val(page);
+            $("#searchForm").submit();
+        }
+    });
+</script>
+</html>

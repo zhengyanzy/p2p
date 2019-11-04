@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>蓝源Eloan-P2P平台</title>
+    <div th:include="commons/links :: links"></div>
+    <link type="text/css" rel="stylesheet" href="static/css/account.css"/>
+    <script type="text/javascript" src="static/js/plugins/jquery.twbsPagination.min.js"></script>
+    <script type="text/javascript" src="static/js/plugins-override.js"></script>
+    <script type="text/javascript" src="static/js/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="static/js/plugins/jquery.form.js"></script>
+</head>
+<body>
+<div th:replace="commons/head :: header"></div>
+<div th:replace="commons/navbar :: navbar(activeUrl='personal')"></div>
+
+<div class="container">
+    <div class="row">
+        <!--导航菜单-->
+        <div class="col-sm-3">
+            <div th:replace="commons/leftmenu :: leftmenu(activeUrl='ipLog')"></div>
+        </div>
+        <!-- 功能页面 -->
+        <div class="col-sm-9">
+            <form action="/website/iplog_list.do" name="searchForm" id="searchForm" class="form-inline" method="post">
+                <input type="hidden" id="currentPage" name="currentPage" value="1"/>
+                <div class="form-group">
+                    <label>时间范围</label>
+                    <input type="date" class="form-control beginDate" name="beginDate"
+                           th:value="${#calendars.format(qo.beginDate,'yyyy-MM-dd')}"/>
+                </div>
+                <div class="form-group">
+                    <label></label>
+                    <input type="date" class="form-control endDate" name="endDate"
+                           th:value="${#calendars.format(qo.endDate,'yyyy-MM-dd')}"/>
+                </div>
+                <div class="form-group">
+                    <label>状态</label>
+                    <select class="form-control" name="loginState" id="state">
+                        <option value="-1">全部</option>
+                        <option value="0">登录失败</option>
+                        <option value="1">登录成功</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="query" class="btn btn-success"><i class="icon-search"></i>查询</button>
+                </div>
+            </form>
+
+            <div class="panel panel-default" style="margin-top: 20px;">
+                <div class="panel-heading">
+                    登录日志
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>用户</th>
+                        <th>登录时间</th>
+                        <th>登录ip</th>
+                        <th>登录状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="iplog_list">
+                    </tbody>
+                </table>
+                <div style="text-align: right;">
+                    <ul id="pagination" class="pagination"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //input框中显示日期的插件,我们直接使用input框默认的date
+    //$(function(){
+    //$(".beginDate,.endDate").click(function(){
+    //WdatePicker();
+    //});
+
+    //表单回显select选中的值
+    $().ready(function () {
+        var getLoginState = [[${qo.getLoginState()}]];
+        $("#state option[value='" + getLoginState + "']").attr("selected", "selected");
+    })
+
+    $("#searchForm").ajaxForm(function (data) {
+        var iplog_list = $("#iplog_list");
+        iplog_list.hide();//淡入淡出
+        iplog_list.html(data);
+        iplog_list.show(500);
+    });
+    $("#searchForm").submit();
+
+    //点击查询 事件
+    $("#query").click(function () {
+        $("#searchForm").submit();
+    });
+</script>
+</body>
+</html>

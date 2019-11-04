@@ -1,0 +1,2 @@
+1、account和userinfo表创建的时候id不用设置自增,id使用logininfo的id
+

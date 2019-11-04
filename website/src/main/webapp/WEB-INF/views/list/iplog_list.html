@@ -1,0 +1,19 @@
+<tr th:each="prod:${pageResult.listData}">
+    <td th:text="${prod.userName}"></td>
+    <td th:text="${#calendars.format(prod.loginTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+    <td th:text="${prod.ip}"></td>
+    <td th:text="${prod.loginState==0?'登录失败':'登录成功'}"></td>
+</tr>
+
+<script type="text/javascript" th:inline="javascript">
+    //分页
+    $("#pagination").twbsPagination({
+        totalPages:[[${pageResult.getTotalPage()}]],
+        visiblePages: 5,
+        startPage:[[${pageResult.getCurrentPage()}]],
+        onPageClick: function (event, page) {
+            $("#currentPage").val(page);
+            $("#searchForm").submit();
+        }
+    })
+</script>

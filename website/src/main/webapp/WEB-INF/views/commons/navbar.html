@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="navbar navbar-default el-navbar" th:fragment="navbar">
+	<div class="container">
+		<div class="navbar-header">
+			<a href="/">
+				<img alt="Brand" src="static/images/logo.png">
+			</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li id="index"><a th:href="@{/index.do}">首页</a></li>
+			<li id="invest"><a  th:href="@{/invest.do}">我要投资</a></li>
+			<li id="borrow"  th:class="${activeUrl=='borrow'?'active':''}"><a  th:href="@{/borrow.do}">我要借款</a></li>
+			<li id="personal"  th:class="${activeUrl=='personal'?'active':''}"><a th:href="@{/person.do}">个人中心</a></li>
+			<li><a href="#">新手指引</a></li>
+			<li><a href="#">关于我们</a></li>
+		</ul>
+	</div>
+</div>

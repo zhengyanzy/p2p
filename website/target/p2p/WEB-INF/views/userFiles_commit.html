@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>蓝源Eloan-P2P平台</title>
+		<div th:include="commons/links :: links"></div>
+		<link type="text/css" rel="stylesheet" href="static/css/account.css" />
+		<script type="text/javascript" src="static/js/plugins/jquery.form.js"></script>
+	</head>
+	<body>
+		<!-- 网页顶部导航 -->
+		<div th:replace="commons/head :: header"></div>
+		<div th:replace="commons/navbar :: navbar(activeUrl='personal')"></div>
+
+		<div class="container">
+			<div class="row">
+				<!--导航菜单-->
+				<div class="col-sm-3">
+					<div th:replace="commons/leftmenu :: leftmenu(activeUrl='userFile')"></div>
+				</div>
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							用户认证文件信息
+						</div>
+					</div>
+					<div class="row">
+					  <form method="POST" action="/website/userFile_selectType.do" id="editForm">
+					  <div class="col-sm-6 col-md-4" th:each="file:${userFiles}">
+					    <div class="thumbnail">
+					      <img th:src="'/website'+${file.image}"/>
+					      <div class="caption">
+					        <p>
+					        	<input name="id" th:value="${file.id}"/>
+					        	<select class="form-control" name="fileType" style="width: 180px" autocomplate="off">
+										<option value="${type.id}" th:value="${type.id}" th:each="type:${fileTypes}">[[${type.title}]]</option>
+								</select>
+					        </p>
+					      </div>
+					    </div>
+					  </div>
+					  </form>
+					</div>
+					<div class="row">
+						<a href="javascript:;" id="submitFileType" class="btn btn-success">确定提交</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--	<div th:replace="commons/footer::footer"></div>-->
+	</body>
+
+	<script type="text/javascript">
+		$(function(){
+			$("#editForm").ajaxForm(function(){
+				window.location.reload();
+			});
+
+			$("#submitFileType").click(function(){
+				$("#editForm").submit();
+			});
+		})
+	</script>
+</html>

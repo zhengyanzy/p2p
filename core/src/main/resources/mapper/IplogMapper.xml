@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.p2p.base.mapper.IplogMapper">
+  <resultMap id="BaseResultMap" type="com.zy.p2p.base.domain.Iplog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="loginState" jdbcType="TINYINT" property="loginState" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="loginTime" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="userType" jdbcType="TINYINT" property="userType" />
+  </resultMap>
+  <insert id="insert" parameterType="com.zy.p2p.base.domain.Iplog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into javas1.iplog (ip, loginState, userName, loginTime,userType)
+    values (#{ip,jdbcType=VARCHAR}, #{loginState,jdbcType=TINYINT}, #{userName,jdbcType=VARCHAR},#{loginTime,jdbcType=TIMESTAMP},#{userType})
+  </insert>
+
+  <sql id="base_column">
+  	id, ip, loginState, userName, loginTime,userType
+  </sql>
+  <sql id="base_where">
+    <where>
+      <if test="beginDate!=null">
+        AND loginTime &gt;= #{beginDate}
+      </if>
+      <if test="endDate!=null">
+        AND loginTime &lt;= #{endDate}
+      </if>
+      <if test="loginState>-1">
+        AND loginState = #{loginState}
+      </if>
+      <if test="username!=null">
+        AND username = #{username}
+      </if>
+      <!--如果userType==-1,条件不成立,直接返回所有的数据-->
+      <if test="userType>-1">
+        AND userType = #{userType}
+      </if>
+    </where>
+  </sql>
+  <select id="queryForCount" resultType="int">
+    SELECT count(id)
+    FROM iplog
+    <include refid="base_where" />
+  </select>
+  <select id="query" resultMap="BaseResultMap">
+    SELECT <include refid="base_column" />
+    FROM iplog
+    <include refid="base_where" />
+    ORDER BY loginTime DESC
+    LIMIT #{start},#{pageSize}
+  </select>
+</mapper>
