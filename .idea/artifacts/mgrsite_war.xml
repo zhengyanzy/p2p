@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="mgrsite:war">
+    <output-path>$PROJECT_DIR$/mgrsite/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>mgrsite</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="p2p.war">
+      <element id="artifact" artifact-name="mgrsite:war exploded" />
+    </root>
+  </artifact>
+</component>
